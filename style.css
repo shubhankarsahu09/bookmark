@@ -715,16 +715,7 @@ body {
     transform: scale(1);
 }
 
-/* Top-Left Star button */
-.btn-favorite-small {
-    top: 6px;
-    left: 6px;
-    transform: scale(0.8);
-}
 
-.bookmark-card:hover .btn-favorite-small {
-    transform: scale(1);
-}
 
 /* Bottom Right Edit button */
 .btn-edit-small {
@@ -749,11 +740,7 @@ body {
     transform: scale(1.1) !important;
 }
 
-.action-btn-small.starred {
-    color: var(--color-star) !important;
-    border-color: var(--color-star);
-    background: rgba(255, 204, 0, 0.08) !important;
-}
+
 
 .action-btn-small:hover.btn-delete-small {
     color: var(--color-danger);

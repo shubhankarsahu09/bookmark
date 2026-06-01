@@ -115,7 +115,6 @@ function render() {
     renderCategoriesSidebar();
     updateLibraryNav();
     renderBookmarks();
-    updateSidebarStats();
 }
 
 // Renders macOS-style Left Sidebar Category links
@@ -175,7 +174,7 @@ function renderCategoriesSidebar() {
 
 // Syncs Library section filters active states and bookmark counts
 function updateLibraryNav() {
-    const filters = ['all', 'favorites', 'recent'];
+    const filters = ['all', 'recent'];
     filters.forEach(f => {
         const el = document.getElementById(`nav-${f}`);
         if (el) {
@@ -188,8 +187,6 @@ function updateLibraryNav() {
             let count = 0;
             if (f === 'all') {
                 count = state.bookmarks.length;
-            } else if (f === 'favorites') {
-                count = state.bookmarks.filter(b => b.starred).length;
             } else if (f === 'recent') {
                 const twentyFourHrsAgo = Date.now() - 24 * 60 * 60 * 1000;
                 count = state.bookmarks.filter(b => b.dateAdded >= twentyFourHrsAgo).length;
@@ -206,13 +203,7 @@ function updateLibraryNav() {
     });
 }
 
-// Dynamically updates sidebar statistics overview numbers
-function updateSidebarStats() {
-    const totalEl = document.getElementById('stat-total');
-    const starredEl = document.getElementById('stat-starred');
-    if (totalEl) totalEl.textContent = state.bookmarks.length;
-    if (starredEl) starredEl.textContent = state.bookmarks.filter(b => b.starred).length;
-}
+
 
 // Renders Safari-style minimalist squares
 function renderBookmarks() {
@@ -229,12 +220,10 @@ function renderBookmarks() {
     // Step 1: Filter State Data by category
     let filtered = [...state.bookmarks];
 
-    if (state.activeFilter === 'favorites') {
-        filtered = filtered.filter(b => b.starred);
-    } else if (state.activeFilter === 'recent') {
+    if (state.activeFilter === 'recent') {
         const twentyFourHrsAgo = Date.now() - 24 * 60 * 60 * 1000;
         filtered = filtered.filter(b => b.dateAdded >= twentyFourHrsAgo);
-    } else if (state.activeFilter !== 'all') {
+    } else if (state.activeFilter !== 'all' && state.activeFilter !== 'favorites') {
         const selectedCat = state.categories.find(c => c.id === state.activeFilter);
         if (selectedCat) {
             filtered = filtered.filter(b => b.categoryId === selectedCat.id);
@@ -309,14 +298,11 @@ function renderBookmarks() {
             
             <!-- Corner Floating Overlays (visible on tile hover) -->
             <div class="card-actions">
-                <button class="action-btn-small btn-favorite-small ${bm.starred ? 'starred' : ''}" title="Favorite">
-                    <i class="fa-${bm.starred ? 'solid' : 'regular'} fa-star"></i>
-                </button>
-                <button class="action-btn-small btn-delete-small" title="Delete">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
                 <button class="action-btn-small btn-edit-small" title="Edit">
                     <i class="fa-solid fa-pencil"></i>
+                </button>
+                <button class="action-btn-small btn-delete-small" title="Delete">
+                    <i class="fa-solid fa-trash-can"></i>
                 </button>
             </div>
         `;
@@ -328,12 +314,6 @@ function renderBookmarks() {
         });
 
         // Small Action Buttons Clicks
-        const btnFav = card.querySelector('.btn-favorite-small');
-        btnFav.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleBookmarkStar(bm.id);
-        });
-
         const btnEdit = card.querySelector('.btn-edit-small');
         btnEdit.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -398,19 +378,7 @@ function renderColorPickerGrid() {
     });
 }
 
-// --- CRUD Actions ---
-function toggleBookmarkStar(id) {
-    const idx = state.bookmarks.findIndex(b => b.id === id);
-    if (idx !== -1) {
-        state.bookmarks[idx].starred = !state.bookmarks[idx].starred;
-        saveStateToStorage();
-        render();
-        showToast(
-            state.bookmarks[idx].starred ? 'Added to Favorites.' : 'Removed from Favorites.',
-            'info'
-        );
-    }
-}
+
 
 function deleteBookmark(id) {
     const bm = state.bookmarks.find(b => b.id === id);
@@ -430,7 +398,6 @@ function openBookmarkModal(id = null) {
     
     const modalTitle = document.getElementById('bookmark-modal-title');
     const inputId = document.getElementById('bookmark-id');
-    const inputStar = document.getElementById('bookmark-favorite');
     
     populateCategoryDropdown();
 
@@ -443,11 +410,9 @@ function openBookmarkModal(id = null) {
         document.getElementById('bookmark-url').value = bm.url;
         document.getElementById('bookmark-title').value = bm.title;
         document.getElementById('bookmark-category').value = bm.categoryId;
-        inputStar.checked = bm.starred;
     } else {
         modalTitle.textContent = 'Add Bookmark';
         inputId.value = '';
-        inputStar.checked = false;
         
         if (state.activeFilter !== 'all' && state.activeFilter !== 'favorites' && state.activeFilter !== 'recent') {
             document.getElementById('bookmark-category').value = state.activeFilter;
@@ -465,7 +430,6 @@ function handleBookmarkSubmit(e) {
     const url = document.getElementById('bookmark-url').value.trim();
     const title = document.getElementById('bookmark-title').value.trim();
     const categoryId = document.getElementById('bookmark-category').value;
-    const starred = document.getElementById('bookmark-favorite').checked;
     
     if (id) {
         const idx = state.bookmarks.findIndex(b => b.id === id);
@@ -474,8 +438,7 @@ function handleBookmarkSubmit(e) {
                 ...state.bookmarks[idx],
                 title,
                 url,
-                categoryId,
-                starred
+                categoryId
             };
             showToast('Link updated.', 'success');
         }
@@ -487,7 +450,7 @@ function handleBookmarkSubmit(e) {
             categoryId,
             tags: [],
             notes: '',
-            starred,
+            starred: false,
             dateAdded: Date.now()
         };
         state.bookmarks.push(newBm);

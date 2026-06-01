@@ -22,17 +22,7 @@
                 <span class="brand-name">Medulla</span>
             </div>
 
-            <!-- Inline Statistics Overview -->
-            <div class="stats-summary">
-                <div class="stat-item">
-                    <span class="stat-val" id="stat-total">0</span>
-                    <span class="stat-lbl">Total</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-val" id="stat-starred">0</span>
-                    <span class="stat-lbl">Favorites</span>
-                </div>
-            </div>
+
 
             <!-- Main Filter Navigation -->
             <div class="nav-section-title">Library</div>
@@ -44,13 +34,7 @@
                         </span>
                     </a>
                 </li>
-                <li>
-                    <a class="nav-link" data-filter="favorites" id="nav-favorites">
-                        <span class="nav-item-inner">
-                            <i class="fa-solid fa-star" style="color: var(--color-star);"></i> Favorites
-                        </span>
-                    </a>
-                </li>
+
                 <li>
                     <a class="nav-link" data-filter="recent" id="nav-recent">
                         <span class="nav-item-inner">
@@ -168,17 +152,7 @@
                         </select>
                     </div>
                     
-                    <div class="form-group row">
-                        <label class="form-label" style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem;" for="bookmark-favorite">
-                            <i class="fa-solid fa-star" style="color: var(--color-star);"></i> Favorite / Star Link
-                        </label>
-                        <div class="switch-container">
-                            <label class="switch">
-                                <input type="checkbox" id="bookmark-favorite">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
+
 
                     <!-- Tags and Notes are quietly kept as hidden forms to maintain state compatibility without cluttering layout -->
                     <input type="hidden" id="bookmark-tags" value="">
