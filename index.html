@@ -34,6 +34,13 @@
                         </span>
                     </a>
                 </li>
+                <li>
+                    <a class="nav-link" data-filter="favorites" id="nav-favorites">
+                        <span class="nav-item-inner">
+                            <i class="fa-solid fa-star" style="color: var(--color-star);"></i> Favorites
+                        </span>
+                    </a>
+                </li>
 
                 <li>
                     <a class="nav-link" data-filter="recent" id="nav-recent">
@@ -152,6 +159,17 @@
                         </select>
                     </div>
                     
+                    <div class="form-group row">
+                        <label class="form-label" style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem;" for="bookmark-favorite">
+                            <i class="fa-solid fa-star" style="color: var(--color-star);"></i> Favorite / Star Link
+                        </label>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="bookmark-favorite">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
 
 
                     <!-- Tags and Notes are quietly kept as hidden forms to maintain state compatibility without cluttering layout -->

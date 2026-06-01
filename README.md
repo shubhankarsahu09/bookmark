@@ -7,7 +7,7 @@ Medulla is a **premium, ultra-minimalist, and lightweight personal Bookmark Mana
 ## ✨ Features & Visual Highlights
 
 - **Safari Start Page Left Sidebar**: An elegant sidebar navigation workspace (`width: 260px`) featuring macOS-style active indicators, HSL category dots, and clean typographic listings.
-- **Dynamic Link Counts**: Dynamic badge counters embedded directly in list links (e.g. `All (5)`, `Development (1)`) indicating exactly how many bookmarks reside inside.
+- **Dynamic Link Counts**: Dynamic badge counters embedded directly in list links (e.g. `All (5)`, `Favorites (2)`, `Development (1)`) indicating exactly how many bookmarks reside inside.
 - **Favicon-Centric Grid**: Bookmarks are rendered as a clean grid of rounded icons, displaying only a large centered favicon and the site title underneath.
 - **Quiet Actions on Hover**: Action buttons (edit, delete/bin) are completely invisible by default, only fading in as tiny circular overlays on card hover.
 - **Snappy Theme Toggling**: Swaps instantly between default **Pro Dark** mode and a clean **System Light** mode.

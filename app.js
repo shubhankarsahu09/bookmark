@@ -174,7 +174,7 @@ function renderCategoriesSidebar() {
 
 // Syncs Library section filters active states and bookmark counts
 function updateLibraryNav() {
-    const filters = ['all', 'recent'];
+    const filters = ['all', 'favorites', 'recent'];
     filters.forEach(f => {
         const el = document.getElementById(`nav-${f}`);
         if (el) {
@@ -187,6 +187,8 @@ function updateLibraryNav() {
             let count = 0;
             if (f === 'all') {
                 count = state.bookmarks.length;
+            } else if (f === 'favorites') {
+                count = state.bookmarks.filter(b => b.starred).length;
             } else if (f === 'recent') {
                 const twentyFourHrsAgo = Date.now() - 24 * 60 * 60 * 1000;
                 count = state.bookmarks.filter(b => b.dateAdded >= twentyFourHrsAgo).length;
@@ -220,10 +222,12 @@ function renderBookmarks() {
     // Step 1: Filter State Data by category
     let filtered = [...state.bookmarks];
 
-    if (state.activeFilter === 'recent') {
+    if (state.activeFilter === 'favorites') {
+        filtered = filtered.filter(b => b.starred);
+    } else if (state.activeFilter === 'recent') {
         const twentyFourHrsAgo = Date.now() - 24 * 60 * 60 * 1000;
         filtered = filtered.filter(b => b.dateAdded >= twentyFourHrsAgo);
-    } else if (state.activeFilter !== 'all' && state.activeFilter !== 'favorites') {
+    } else if (state.activeFilter !== 'all') {
         const selectedCat = state.categories.find(c => c.id === state.activeFilter);
         if (selectedCat) {
             filtered = filtered.filter(b => b.categoryId === selectedCat.id);
@@ -398,6 +402,7 @@ function openBookmarkModal(id = null) {
     
     const modalTitle = document.getElementById('bookmark-modal-title');
     const inputId = document.getElementById('bookmark-id');
+    const inputStar = document.getElementById('bookmark-favorite');
     
     populateCategoryDropdown();
 
@@ -410,9 +415,11 @@ function openBookmarkModal(id = null) {
         document.getElementById('bookmark-url').value = bm.url;
         document.getElementById('bookmark-title').value = bm.title;
         document.getElementById('bookmark-category').value = bm.categoryId;
+        inputStar.checked = bm.starred;
     } else {
         modalTitle.textContent = 'Add Bookmark';
         inputId.value = '';
+        inputStar.checked = false;
         
         if (state.activeFilter !== 'all' && state.activeFilter !== 'favorites' && state.activeFilter !== 'recent') {
             document.getElementById('bookmark-category').value = state.activeFilter;
@@ -430,6 +437,7 @@ function handleBookmarkSubmit(e) {
     const url = document.getElementById('bookmark-url').value.trim();
     const title = document.getElementById('bookmark-title').value.trim();
     const categoryId = document.getElementById('bookmark-category').value;
+    const starred = document.getElementById('bookmark-favorite').checked;
     
     if (id) {
         const idx = state.bookmarks.findIndex(b => b.id === id);
@@ -438,7 +446,8 @@ function handleBookmarkSubmit(e) {
                 ...state.bookmarks[idx],
                 title,
                 url,
-                categoryId
+                categoryId,
+                starred
             };
             showToast('Link updated.', 'success');
         }
@@ -450,7 +459,7 @@ function handleBookmarkSubmit(e) {
             categoryId,
             tags: [],
             notes: '',
-            starred: false,
+            starred,
             dateAdded: Date.now()
         };
         state.bookmarks.push(newBm);
