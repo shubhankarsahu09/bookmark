@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medulla // Personal Portal Manager</title>
+    <!-- FontAwesome Vector Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Clean Minimalist Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- --- 1. Apple-style Minimalist Left Sidebar --- -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand" id="brand-home">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-compass-drafting"></i>
+                </div>
+                <span class="brand-name">Medulla</span>
+            </div>
+
+            <!-- Inline Statistics Overview -->
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <span class="stat-val" id="stat-total">0</span>
+                    <span class="stat-lbl">Total</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-val" id="stat-starred">0</span>
+                    <span class="stat-lbl">Favorites</span>
+                </div>
+            </div>
+
+            <!-- Main Filter Navigation -->
+            <div class="nav-section-title">Library</div>
+            <ul class="nav-list">
+                <li>
+                    <a class="nav-link active" data-filter="all" id="nav-all">
+                        <span class="nav-item-inner">
+                            <i class="fa-solid fa-folder-open"></i> All Bookmarks
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" data-filter="favorites" id="nav-favorites">
+                        <span class="nav-item-inner">
+                            <i class="fa-solid fa-star" style="color: var(--color-star);"></i> Favorites
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" data-filter="recent" id="nav-recent">
+                        <span class="nav-item-inner">
+                            <i class="fa-solid fa-clock"></i> Recently Added
+                        </span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Dynamic Categories Navigation -->
+            <div class="nav-section-title">Categories</div>
+            <div class="category-scroll">
+                <ul class="nav-list" id="categories-list">
+                    <!-- Categories will be rendered dynamically by app.js -->
+                </ul>
+                <button class="add-category-btn-inline" id="btn-add-category-sidebar">
+                    <i class="fa-solid fa-plus"></i> Create Category
+                </button>
+            </div>
+
+            <!-- Sidebar Footer Controls -->
+            <div class="sidebar-footer">
+                <div style="position: relative; width: 100%;">
+                    <button class="btn-secondary" id="settings-toggle" style="width: 100%; border-radius: var(--border-radius-sm); font-size:0.8rem; justify-content:center;">
+                        <i class="fa-solid fa-sliders"></i> Settings & backups
+                    </button>
+                    <!-- Settings Dropdown Popover (opens upwards in sidebar footer) -->
+                    <div class="dropdown-menu" id="settings-dropdown" style="width: 100%; bottom: 38px; top: auto; right: 0;">
+                        <button class="dropdown-item" id="btn-export-json">
+                            <i class="fa-solid fa-file-export"></i> Export JSON Backup
+                        </button>
+                        <button class="dropdown-item" id="btn-trigger-import-json">
+                            <i class="fa-solid fa-file-import"></i> Import JSON Backup
+                        </button>
+                        <button class="dropdown-item" id="btn-trigger-import-html">
+                            <i class="fa-brands fa-chrome"></i> Import Chrome HTML
+                        </button>
+                        <hr style="border: 0; border-top: 1px solid var(--border-neutral); margin: 0.25rem 0;">
+                        <button class="dropdown-item item-danger" id="btn-clear-all">
+                            <i class="fa-solid fa-trash-can"></i> Clear All Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- --- 2. Main Dashboard Canvas Area --- -->
+        <main class="main-content">
+            
+            <!-- Dashboard Search & Header -->
+            <header class="dashboard-header">
+                <div style="display: flex; align-items: center; gap: 1rem; flex-grow: 1;">
+                    <button class="icon-btn mobile-nav-toggle" id="mobile-menu-toggle">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="search-wrapper">
+                        <input type="text" class="search-input" id="search-bar" placeholder="Search saved links...">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    </div>
+                </div>
+                <div class="action-group" style="display: flex; align-items: center; gap: 0.65rem;">
+                    <!-- Segmented View Mode Toggle Buttons -->
+                    <div class="view-controls" id="view-controls-panel">
+                        <button class="view-btn active" id="view-grid" title="Grid View">
+                            <i class="fa-solid fa-table-cells-large"></i>
+                        </button>
+                        <button class="view-btn" id="view-list" title="List View">
+                            <i class="fa-solid fa-list"></i>
+                        </button>
+                    </div>
+                    <button class="btn-primary" id="btn-add-bookmark">
+                        <i class="fa-solid fa-plus"></i> Add Link
+                    </button>
+                </div>
+            </header>
+
+            <!-- Bookmarks Grid Canvas -->
+            <section class="bookmarks-grid" id="bookmarks-container">
+                <!-- Dynamically Rendered Tiles by JS -->
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- --- MODALS PORTALS SYSTEM --- -->
+    <!-- ========================================== -->
+
+    <!-- 1. Add / Edit Bookmark Sheet -->
+    <div class="modal-overlay" id="modal-bookmark">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="bookmark-modal-title">New Bookmark</h3>
+                <button class="modal-close-btn" data-close="modal-bookmark"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-bookmark" autocomplete="off">
+                <div class="modal-body">
+                    <input type="hidden" id="bookmark-id">
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="bookmark-url">URL *</label>
+                        <input type="url" class="form-input" id="bookmark-url" placeholder="https://example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="bookmark-title">Title *</label>
+                        <input type="text" class="form-input" id="bookmark-title" placeholder="Site or Portal Name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="bookmark-category">Category</label>
+                        <select class="form-select" id="bookmark-category">
+                            <!-- Populated dynamically by app.js -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label class="form-label" style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem;" for="bookmark-favorite">
+                            <i class="fa-solid fa-star" style="color: var(--color-star);"></i> Favorite / Star Link
+                        </label>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="bookmark-favorite">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Tags and Notes are quietly kept as hidden forms to maintain state compatibility without cluttering layout -->
+                    <input type="hidden" id="bookmark-tags" value="">
+                    <input type="hidden" id="bookmark-notes" value="">
+
+                    <div class="modal-footer-actions">
+                        <button type="button" class="btn-secondary" data-close="modal-bookmark">Cancel</button>
+                        <button type="submit" class="btn-primary" id="btn-save-bookmark">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Add / Edit Category Sheet -->
+    <div class="modal-overlay" id="modal-category">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="category-modal-title">New Category</h3>
+                <button class="modal-close-btn" data-close="modal-category"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-category" autocomplete="off">
+                <div class="modal-body">
+                    <input type="hidden" id="category-id">
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="category-name">Category Name *</label>
+                        <input type="text" class="form-input" id="category-name" placeholder="e.g. Development, Design" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="category-icon">Emoji Symbol *</label>
+                        <input type="text" class="form-input" id="category-icon" placeholder="🔥, 💻, 🎬, 📚" maxlength="2" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Theme Color Accent</label>
+                        <div class="color-picker-grid" id="category-color-grid">
+                            <!-- Populated with color choices by JS -->
+                        </div>
+                        <input type="hidden" id="category-color" value="#6366f1">
+                    </div>
+
+                    <div class="modal-footer-actions" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <button type="button" class="btn-secondary" id="btn-delete-category" style="color: var(--color-danger); border-color: rgba(255, 59, 48, 0.2); background: rgba(255, 59, 48, 0.05); display: none;">
+                            <i class="fa-solid fa-trash-can"></i> Delete Category
+                        </button>
+                        <div style="display: flex; gap: 0.4rem; margin-left: auto;">
+                            <button type="button" class="btn-secondary" data-close="modal-category">Cancel</button>
+                            <button type="submit" class="btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Chrome / HTML Bookmark Import Sheet -->
+    <div class="modal-overlay" id="modal-import-html">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Import Browser Bookmarks</h3>
+                <button class="modal-close-btn" data-close="modal-import-html"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="file-drop-area" id="html-drop-zone">
+                    <i class="fa-solid fa-cloud-arrow-up file-drop-icon"></i>
+                    <div class="file-drop-text">
+                        <h4>Drag & drop bookmarks HTML file here</h4>
+                        <p>Exported from Chrome, Safari, Firefox, or Brave</p>
+                    </div>
+                    <span class="btn-secondary" style="height: 30px; font-size:0.75rem; align-items: center; justify-content: center;">Select File</span>
+                    <input type="file" class="file-input" id="html-file-input" accept=".html,.htm">
+                </div>
+                
+                <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <div class="form-label" style="font-size: 0.7rem;">Instructions:</div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;">
+                        1. In Chrome, open Bookmark Manager (<kbd>Ctrl+Shift+O</kbd>).<br>
+                        2. Click the three dots top right and select <strong>"Export Bookmarks"</strong>.<br>
+                        3. Drop the <code>bookmarks.html</code> file above to sync folder structure!
+                    </p>
+                </div>
+
+                <div class="modal-footer-actions">
+                    <button class="btn-secondary" data-close="modal-import-html">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden File Input for JSON Backup Import -->
+    <input type="file" id="json-file-input" accept=".json" style="display: none;">
+
+    <!-- Mobile Sidebar Dimming Overlay -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <!-- ========================================== -->
+    <!-- --- SYSTEM TOAST NOTIFICATIONS --- -->
+    <!-- ========================================== -->
+    <div class="toast-container" id="toast-wrapper"></div>
+
+    <!-- Floating Theme Switcher at Bottom Right -->
+    <button class="theme-float-btn" id="theme-float-toggle" title="Toggle Theme">
+        <i class="fa-solid fa-moon" id="theme-float-icon"></i>
+    </button>
+
+    <!-- Core Javascript Code -->
+    <script src="app.js"></script>
+</body>
+</html>
