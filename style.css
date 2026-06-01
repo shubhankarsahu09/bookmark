@@ -573,19 +573,19 @@ body {
 /* --- Safari start-page Bookmarks Grid --- */
 .bookmarks-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 1.5rem;
     padding: 0.5rem 0;
 }
 
-/* Minimalist Horizontal Rectangular Tile card */
+/* Minimalist Square Tile card (Default Grid View) */
 .bookmark-card {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    gap: 0.85rem;
-    text-align: left;
+    justify-content: center;
+    gap: 0.6rem;
+    text-align: center;
     position: relative;
     cursor: pointer;
     width: 100%;
@@ -594,8 +594,8 @@ body {
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--border-neutral);
     border-radius: var(--border-radius-lg);
-    padding: 0.85rem 1rem;
-    min-height: 64px;
+    padding: 1.25rem 0.75rem;
+    min-height: 115px;
     box-shadow: var(--shadow-subtle);
     transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1),
                 background 0.2s,
@@ -605,24 +605,23 @@ body {
 }
 
 .bookmark-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     border-color: var(--border-hover);
     background: var(--bg-card-hover);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
 }
 
-/* Category Accent Strip vertically on the left edge of the tile */
+/* Category Accent Strip at very bottom of square tile */
 .category-indicator-strip {
     position: absolute;
-    left: 0;
-    top: 0;
     bottom: 0;
-    width: 4px;
-    height: 100%;
+    left: 0;
+    right: 0;
+    height: 3px;
     transition: var(--transition-snappy);
 }
 
-/* Logo Image Container (Clean, transparent, centered on left) */
+/* Logo Image Container (Centered, transparent) */
 .site-favicon-container {
     width: 36px;
     height: 36px;
@@ -630,7 +629,6 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
-    flex-shrink: 0;
     transition: transform 0.2s ease;
 }
 
@@ -639,34 +637,32 @@ body {
 }
 
 .site-favicon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
 }
 
 .site-letter-avatar {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: white;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
-/* Left-aligned completely visible site name */
+/* Centered site name */
 .site-title {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     font-weight: 600;
     color: var(--text-primary);
-    text-align: left;
-    white-space: normal;
-    word-break: break-word;
-    line-height: 1.35;
-    flex-grow: 1;
-    padding-right: 75px; /* leaves breathing room for far-right hover buttons */
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     transition: color 0.2s;
 }
 
@@ -677,21 +673,24 @@ body {
 /* Quiet Action Buttons appearing on Hover */
 .card-actions {
     position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    pointer-events: none; /* let click pass through to card when hidden */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none; /* let click pass through to icon */
     opacity: 0;
     transition: opacity 0.15s ease;
 }
 
+.bookmark-card:hover .card-actions {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 .action-btn-small {
-    position: static; /* layout relative inside card-actions flexbox */
-    width: 22px;
-    height: 22px;
+    position: absolute; /* absolute inside the card overlay */
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: var(--bg-canvas);
     border: 1px solid var(--border-neutral);
@@ -700,26 +699,42 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.72rem;
-    opacity: 1; /* handled by parent card-actions */
-    pointer-events: auto; /* active for clicks */
+    font-size: 0.65rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     transition: transform 0.15s ease, background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 /* Top-Right Delete button */
 .btn-delete-small {
-    /* Position handled by flex layout */
+    top: 6px;
+    right: 6px;
+    transform: scale(0.8);
+}
+
+.bookmark-card:hover .btn-delete-small {
+    transform: scale(1);
 }
 
 /* Top-Left Star button */
 .btn-favorite-small {
-    /* Position handled by flex layout */
+    top: 6px;
+    left: 6px;
+    transform: scale(0.8);
+}
+
+.bookmark-card:hover .btn-favorite-small {
+    transform: scale(1);
 }
 
 /* Bottom Right Edit button */
 .btn-edit-small {
-    /* Position handled by flex layout */
+    bottom: 8px;
+    right: 6px;
+    transform: scale(0.8);
+}
+
+.bookmark-card:hover .btn-edit-small {
+    transform: scale(1);
 }
 
 /* Make action buttons visible on hover */
@@ -751,61 +766,107 @@ body {
     display: none;
 }
 
-/* --- List View Layout Mode --- */
+/* --- Tile View Layout Mode (Long Horizontal Rectangular Tiles) --- */
 .bookmarks-grid.list-layout {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
 }
 
 .bookmarks-grid.list-layout .bookmark-card {
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    padding: 0.4rem 0.75rem;
-    border-radius: var(--border-radius-md);
-    border: 1px solid transparent;
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    min-height: 0;
-    box-shadow: none;
-}
-
-.bookmarks-grid.list-layout .category-indicator-strip {
-    display: none;
+    justify-content: flex-start;
+    gap: 0.85rem;
+    text-align: left;
+    padding: 0.85rem 1rem;
+    min-height: 64px;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-neutral);
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-subtle);
 }
 
 .bookmarks-grid.list-layout .bookmark-card:hover {
-    background: var(--bg-sidebar);
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.bookmarks-grid.list-layout .category-indicator-strip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    height: 100%;
+    display: block; /* override display: none */
 }
 
 .bookmarks-grid.list-layout .site-favicon-container {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
+    width: 36px;
+    height: 36px;
+    border-radius: 0;
     border: none;
     box-shadow: none;
     transform: none !important;
     background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .bookmarks-grid.list-layout .site-favicon {
-    width: 14px;
-    height: 14px;
+    width: 28px;
+    height: 28px;
 }
 
 .bookmarks-grid.list-layout .site-letter-avatar {
-    font-size: 0.7rem;
-    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+    border-radius: 6px;
 }
 
 .bookmarks-grid.list-layout .site-title {
-    font-size: 0.85rem;
-    font-weight: 500;
-    flex-grow: 1;
+    font-size: 0.82rem;
+    font-weight: 600;
     text-align: left;
-    margin-left: 0.75rem;
-    padding-right: 80px; /* resets wide grid padding and leaves space for absolute buttons on the right */
+    margin-left: 0;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.35;
+    flex-grow: 1;
+    padding-right: 75px; /* leaves space for inline action buttons on the far right */
+}
+
+.bookmarks-grid.list-layout .card-actions {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+.bookmarks-grid.list-layout .bookmark-card:hover .card-actions {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.bookmarks-grid.list-layout .action-btn-small {
+    position: static; /* horizontal inline layout */
+    width: 22px;
+    height: 22px;
+    font-size: 0.72rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-radius: 50%;
+    transform: none !important;
 }
 
 /* Empty State */
