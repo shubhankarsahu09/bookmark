@@ -748,6 +748,31 @@ body {
     background: rgba(255, 59, 48, 0.08);
 }
 
+/* Quiet Static Star Badge overlaid on favicon corner */
+.favorite-star-badge {
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    color: var(--color-star, #ffcc00);
+    font-size: 0.52rem;
+    pointer-events: none;
+    z-index: 5;
+    background: var(--bg-card);
+    border: 1px solid var(--border-neutral);
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .favorite-star-badge {
+    color: #ff9500; /* slightly darker golden orange in light theme for contrast */
+    background: #ffffff;
+}
+
 /* Hide unused card tags or descriptions entirely */
 .card-body, .bookmark-tags, .bookmark-category-pill {
     display: none;

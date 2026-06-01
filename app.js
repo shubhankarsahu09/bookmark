@@ -292,6 +292,11 @@ function renderBookmarks() {
                 <div class="site-letter-avatar" style="background: ${catColor}; display: none;">
                     ${firstLetter}
                 </div>
+                ${bm.starred ? `
+                    <div class="favorite-star-badge" title="Favorite">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                ` : ''}
             </div>
             
             <!-- Centered Site Title -->
