@@ -657,6 +657,10 @@ function handleJSONImport(e) {
                     
                     let added = 0;
                     data.bookmarks.forEach(newBm => {
+                        // Sanitize URL — prepend https:// if protocol is missing
+                        if (newBm.url && !/^https?:\/\//i.test(newBm.url) && !/^ftp:\/\//i.test(newBm.url)) {
+                            newBm.url = 'https://' + newBm.url.trim();
+                        }
                         if (!state.bookmarks.some(b => b.url === newBm.url)) {
                             newBm.id = 'bm-imp-' + Date.now() + '-' + Math.floor(Math.random()*1000);
                             state.bookmarks.push(newBm);
