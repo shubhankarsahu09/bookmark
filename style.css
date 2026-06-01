@@ -677,14 +677,14 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    pointer-events: none; /* let click pass through to icon */
+    pointer-events: none; /* always pass through to card */
     opacity: 0;
     transition: opacity 0.15s ease;
 }
 
 .bookmark-card:hover .card-actions {
     opacity: 1;
-    pointer-events: auto;
+    /* pointer-events stays none — only buttons below opt in */
 }
 
 .action-btn-small {
@@ -701,6 +701,7 @@ body {
     justify-content: center;
     font-size: 0.65rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    pointer-events: auto; /* buttons opt in to receive clicks */
     transition: transform 0.15s ease, background 0.15s, color 0.15s, border-color 0.15s;
 }
 
