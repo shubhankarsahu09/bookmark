@@ -33,48 +33,7 @@ const SEED_CATEGORIES = [
     { id: 'cat-design', name: 'Design', icon: '🎨', color: '#af52de' }
 ];
 
-const SEED_BOOKMARKS = [
-    {
-        id: 'bm-1',
-        title: 'GitHub Portal',
-        url: 'https://github.com',
-        categoryId: 'cat-dev',
-        starred: true,
-        dateAdded: Date.now() - 1000 * 60 * 60 * 24 * 3
-    },
-    {
-        id: 'bm-2',
-        title: 'MDN Web Docs',
-        url: 'https://developer.mozilla.org',
-        categoryId: 'cat-resources',
-        starred: true,
-        dateAdded: Date.now() - 1000 * 60 * 60 * 24 * 2
-    },
-    {
-        id: 'bm-3',
-        title: 'Dribbble Creative',
-        url: 'https://dribbble.com',
-        categoryId: 'cat-design',
-        starred: false,
-        dateAdded: Date.now() - 1000 * 60 * 60 * 12
-    },
-    {
-        id: 'bm-4',
-        title: 'YouTube Stream',
-        url: 'https://youtube.com',
-        categoryId: 'cat-entertainment',
-        starred: false,
-        dateAdded: Date.now() - 1000 * 60 * 60 * 4
-    },
-    {
-        id: 'bm-5',
-        title: 'Apple Portal',
-        url: 'https://apple.com',
-        categoryId: 'cat-resources',
-        starred: false,
-        dateAdded: Date.now() - 1000 * 60 * 30
-    }
-];
+const SEED_BOOKMARKS = [];
 
 // --- Initializing Application ---
 function initApp() {
