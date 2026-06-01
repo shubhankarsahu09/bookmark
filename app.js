@@ -328,10 +328,16 @@ function renderBookmarks() {
             </div>
         `;
 
-        // Card Click Trigger
+        // Card Click Trigger — uses a temporary <a> tag to avoid popup-blocker issues
         card.addEventListener('click', (e) => {
             if (e.target.closest('.card-actions')) return;
-            window.open(bm.url, '_blank', 'noopener,noreferrer');
+            const a = document.createElement('a');
+            a.href = bm.url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         });
 
         // Small Action Buttons Clicks
