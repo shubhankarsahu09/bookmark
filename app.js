@@ -59,6 +59,18 @@ function initApp() {
     if (localCategories && localBookmarks) {
         state.categories = JSON.parse(localCategories);
         state.bookmarks = JSON.parse(localBookmarks);
+        
+        // Proactive URL sanitization for existing links
+        let migrated = false;
+        state.bookmarks.forEach(bm => {
+            if (bm.url && !/^https?:\/\//i.test(bm.url) && !/^ftp:\/\//i.test(bm.url)) {
+                bm.url = 'https://' + bm.url.trim();
+                migrated = true;
+            }
+        });
+        if (migrated) {
+            saveStateToStorage();
+        }
     } else {
         state.categories = [...SEED_CATEGORIES];
         state.bookmarks = [...SEED_BOOKMARKS];
@@ -439,10 +451,15 @@ function handleBookmarkSubmit(e) {
     e.preventDefault();
     
     const id = document.getElementById('bookmark-id').value;
-    const url = document.getElementById('bookmark-url').value.trim();
+    let url = document.getElementById('bookmark-url').value.trim();
     const title = document.getElementById('bookmark-title').value.trim();
     const categoryId = document.getElementById('bookmark-category').value;
     const starred = document.getElementById('bookmark-favorite').checked;
+    
+    // Automatically prepend https:// protocol if missing to prevent relative URL 404s
+    if (url && !/^https?:\/\//i.test(url) && !/^ftp:\/\//i.test(url)) {
+        url = 'https://' + url;
+    }
     
     if (id) {
         const idx = state.bookmarks.findIndex(b => b.id === id);
